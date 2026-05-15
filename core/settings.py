@@ -111,7 +111,6 @@ DATABASES = {
 }
 
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -149,7 +148,6 @@ WHITENOISE_MAX_AGE = 600  # 10 minutos
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django_mongodb_backend.fields.ObjectIdAutoField"
-
 
 
 # ── E-mail (Hostinger SMTP) ─────────────────────────────────────────

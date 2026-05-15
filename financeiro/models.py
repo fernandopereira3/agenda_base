@@ -73,8 +73,7 @@ class Servicos(models.Model):
 
 class Fluxo(models.Model):
     descricao = models.CharField(
-        max_length=200, verbose_name="Descrição", null=False, blank=False,
-        default=""
+        max_length=200, verbose_name="Descrição", null=False, blank=False, default=""
     )
 
     servico = models.CharField(

@@ -421,7 +421,7 @@ def finalizar_atendimento(request, id):
                         valor_pago += val
                         label = MAPA_LABEL.get(forma, forma.capitalize())
                         detalhes_pagamento.append(f"{label} (R$ {val:.2f})")
-                except (ValueError, TypeError):
+                except ValueError, TypeError:
                     pass
 
         forma_pagamento_str = (
@@ -453,7 +453,7 @@ def finalizar_atendimento(request, id):
                     if valor_final > 0:
                         servicos_lista.append((servico_tipo, servico_nome, valor_final))
                         total_geral += valor_final
-                except (ValueError, TypeError):
+                except ValueError, TypeError:
                     pass
 
             index += 1
@@ -480,7 +480,7 @@ def finalizar_atendimento(request, id):
                             (produto_nome, qtd, valor_unitario, valor_final)
                         )
                         total_geral += valor_final
-                except (ValueError, TypeError):
+                except ValueError, TypeError:
                     pass
 
             index += 1
@@ -510,9 +510,7 @@ def finalizar_atendimento(request, id):
             )
 
         servicos_criados = 0
-        colecao_servicos = connections["default"].get_collection(
-            "financeiro_servicos"
-        )
+        colecao_servicos = connections["default"].get_collection("financeiro_servicos")
         for servico_tipo, servico_nome, valor_final in servicos_lista:
             colecao_servicos.insert_one(
                 {
@@ -531,9 +529,7 @@ def finalizar_atendimento(request, id):
             servicos_criados += 1
 
         produtos_criados = 0
-        colecao_produtos = connections["default"].get_collection(
-            "financeiro_produtos"
-        )
+        colecao_produtos = connections["default"].get_collection("financeiro_produtos")
         for produto_nome, qtd, valor_unitario, valor_final in produtos_lista:
             desconto_produto = round(max(0.0, (qtd * valor_unitario) - valor_final), 2)
             colecao_produtos.insert_one(
@@ -553,9 +549,7 @@ def finalizar_atendimento(request, id):
                 }
             )
 
-            colecao_estoque = connections["default"].get_collection(
-                "estoque_produto"
-            )
+            colecao_estoque = connections["default"].get_collection("estoque_produto")
             colecao_estoque.update_one(
                 {"nome": {"$regex": f"^{produto_nome}$", "$options": "i"}},
                 {"$inc": {"quantidade_venda": -qtd, "quantidade_estoque": -qtd}},
@@ -594,7 +588,7 @@ def finalizar_atendimento(request, id):
                         status="Pendente",
                     )
                     novo_agendamento_id = str(novo.id)
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 pass
 
         response_data = {
@@ -777,7 +771,7 @@ def finalizar_mobile_page(request, id):
                     detalhes_pagamento.append(
                         f"{MAPA_LABEL.get(forma, forma.capitalize())} (R$ {val:.2f})"
                     )
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 pass
 
     forma_pagamento_str = (
@@ -806,7 +800,7 @@ def finalizar_mobile_page(request, id):
                 if valor_final > 0:
                     servicos_lista.append((servico_tipo, servico_nome, valor_final))
                     total_geral += valor_final
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 pass
         index += 1
 
@@ -830,7 +824,7 @@ def finalizar_mobile_page(request, id):
                         (produto_nome, qtd, valor_unitario, valor_final)
                     )
                     total_geral += valor_final
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 pass
         index += 1
 
@@ -862,9 +856,7 @@ def finalizar_mobile_page(request, id):
         )
 
     servicos_criados = 0
-    colecao_servicos = connections["default"].get_collection(
-        "financeiro_servicos"
-    )
+    colecao_servicos = connections["default"].get_collection("financeiro_servicos")
     for servico_tipo, servico_nome, valor_final in servicos_lista:
         colecao_servicos.insert_one(
             {
@@ -883,12 +875,8 @@ def finalizar_mobile_page(request, id):
         servicos_criados += 1
 
     produtos_criados = 0
-    colecao_produtos = connections["default"].get_collection(
-        "financeiro_produtos"
-    )
-    colecao_estoque = connections["default"].get_collection(
-        "estoque_produto"
-    )
+    colecao_produtos = connections["default"].get_collection("financeiro_produtos")
+    colecao_estoque = connections["default"].get_collection("estoque_produto")
     for produto_nome, qtd, valor_unitario, valor_final in produtos_lista:
         desconto_produto = round(max(0.0, (qtd * valor_unitario) - valor_final), 2)
         colecao_produtos.insert_one(
@@ -941,7 +929,7 @@ def finalizar_mobile_page(request, id):
                     finalizado=False,
                     status="Pendente",
                 )
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             pass
 
     return redirect("agenda")
@@ -958,8 +946,7 @@ def buscar_clientes(request):
     vistos = set()
     resultado = []
     agendamentos = (
-        Agendamento.objects
-        .filter(cliente_nome__icontains=q)
+        Agendamento.objects.filter(cliente_nome__icontains=q)
         .values("cliente_nome", "cliente_telefone")
         .order_by("cliente_nome")[:30]
     )

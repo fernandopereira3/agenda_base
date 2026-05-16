@@ -63,7 +63,6 @@ INSTALLED_APPS = [
     "core.mongo_apps.MongoContentTypesConfig",
     "django.contrib.staticfiles",
     "agenda",
-    "financeiro",
 ]
 
 MIDDLEWARE = [

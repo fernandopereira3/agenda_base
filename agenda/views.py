@@ -556,19 +556,6 @@ def finalizar_atendimento(request, id):
             )
             produtos_criados += 1
 
-        if valor_pago > 0 and forma_modelo != "a_prazo":
-            try:
-                from financeiro.models import Fluxo
-
-                Fluxo.objects.create(
-                    valor=round(valor_pago, 2),
-                    data=data_atendimento,
-                    tipo="receita",
-                    forma_pagamento=forma_modelo,
-                )
-            except Exception as e:
-                print(f"Erro ao salvar fluxo (agenda atendimento): {e}")
-
         total_itens = servicos_criados + produtos_criados
 
         reagendar_dias_str = request.POST.get("reagendar_dias", "").strip()
@@ -900,19 +887,6 @@ def finalizar_mobile_page(request, id):
             {"$inc": {"quantidade_venda": -qtd, "quantidade_estoque": -qtd}},
         )
         produtos_criados += 1
-
-    if valor_pago > 0 and forma_modelo != "a_prazo":
-        try:
-            from financeiro.models import Fluxo
-
-            Fluxo.objects.create(
-                valor=round(valor_pago, 2),
-                data=data_atendimento,
-                tipo="receita",
-                forma_pagamento=forma_modelo,
-            )
-        except Exception as e:
-            print(f"Erro ao salvar fluxo (finalizar_mobile_page): {e}")
 
     reagendar_dias_str = request.POST.get("reagendar_dias", "").strip()
     if reagendar_dias_str:
